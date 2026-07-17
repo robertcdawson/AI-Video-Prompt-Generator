@@ -5,11 +5,12 @@ import type { FieldStatus, Shot } from "@/lib/types";
 import type { TextFieldKeys } from "@/lib/state/reducer";
 import { CollapsibleSection, DisclosureChevron } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
-import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
+import { FocusHiddenNote, NeedsReviewCount } from "@/components/ui/FocusHiddenNote";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { CharacterPicker } from "@/components/editor/pickers";
 import { charactersInShot, sceneForShot } from "@/lib/generation/promptComposer";
+import { collectTextFields } from "@/lib/stats";
 import { freshId, useOpenProject } from "@/lib/state/ProjectContext";
 
 const SHOT_STATUSES: FieldStatus[] = ["missing", "placeholder", "needs_review", "confirmed"];
@@ -44,6 +45,8 @@ function ShotCard({ shot, index }: { shot: Shot; index: number }) {
         </span>
         <span className="flex items-center gap-2">
           <span className="text-xs text-zinc-400">v{shot.version}</span>
+          {/* In focus mode, collapsed shots still show where open fields are hiding */}
+          <NeedsReviewCount fields={collectTextFields(shot)} />
           <StatusBadge status={shot.status} />
           <DisclosureChevron open={open} />
         </span>
@@ -121,29 +124,6 @@ function ShotCard({ shot, index }: { shot: Shot; index: number }) {
               <FieldInput label="Negative constraints (shot-specific)" field={shot.negativeConstraints} onChange={set("negativeConstraints")} multiline rows={2} />
             </div>
           </div>
-          <FocusHiddenNote
-            fields={[
-              shot.purpose,
-              shot.beat,
-              shot.blocking,
-              shot.screenDirection,
-              shot.framing,
-              shot.lens,
-              shot.movement,
-              shot.composition,
-              shot.lighting,
-              shot.action,
-              shot.dialogue,
-              shot.audioNotes,
-              shot.duration,
-              shot.transition,
-              shot.continuityNotes,
-              shot.negativeConstraints,
-              shot.firstFramePrompt,
-              shot.videoPrompt,
-            ]}
-          />
-
           <div className="mt-3 rounded-lg border border-sky-100 bg-sky-50/50 p-3">
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wide text-sky-800">Generation prompts</span>
@@ -177,7 +157,9 @@ export function ShotsSection() {
     <CollapsibleSection
       title="Shots"
       subtitle={`${project.shots.length} shots · ${confirmed} confirmed`}
+      badge={<NeedsReviewCount fields={project.shots.flatMap(collectTextFields)} />}
     >
+      <FocusHiddenNote fields={project.shots.flatMap(collectTextFields)} />
       <div className="flex flex-col gap-2">
         {project.shots.length === 0 && (
           <p className="text-sm text-zinc-400">No shots yet — add one to a scene below.</p>

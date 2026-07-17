@@ -4,8 +4,21 @@ import type { Location } from "@/lib/types";
 import type { TextFieldKeys } from "@/lib/state/reducer";
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
-import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
+import { FocusHiddenNote, NeedsReviewCount } from "@/components/ui/FocusHiddenNote";
+import { collectTextFields } from "@/lib/stats";
 import { freshId, useOpenProject } from "@/lib/state/ProjectContext";
+
+/** The fields Focus mode can hide — everything except the always-visible name. */
+const hideableFields = (l: Location) => [
+  l.description,
+  l.architecture,
+  l.lighting,
+  l.props,
+  l.materialPalette,
+  l.atmosphere,
+  l.continuityRisks,
+  l.referenceImageNotes,
+];
 
 function LocationCard({ location }: { location: Location }) {
   const { dispatch } = useOpenProject();
@@ -45,18 +58,6 @@ function LocationCard({ location }: { location: Location }) {
           <FieldInput label="Reference image notes" field={location.referenceImageNotes} onChange={set("referenceImageNotes")} multiline rows={2} />
         </div>
       </div>
-      <FocusHiddenNote
-        fields={[
-          location.description,
-          location.architecture,
-          location.lighting,
-          location.props,
-          location.materialPalette,
-          location.atmosphere,
-          location.continuityRisks,
-          location.referenceImageNotes,
-        ]}
-      />
     </div>
   );
 }
@@ -64,7 +65,12 @@ function LocationCard({ location }: { location: Location }) {
 export function LocationsSection() {
   const { project, dispatch } = useOpenProject();
   return (
-    <CollapsibleSection title="Locations" subtitle={`${project.locations.length} defined`}>
+    <CollapsibleSection
+      title="Locations"
+      subtitle={`${project.locations.length} defined`}
+      badge={<NeedsReviewCount fields={project.locations.flatMap(collectTextFields)} />}
+    >
+      <FocusHiddenNote fields={project.locations.flatMap(hideableFields)} />
       <div className="flex flex-col gap-4">
         {project.locations.length === 0 && (
           <p className="text-sm text-zinc-400">No locations yet — add one below.</p>

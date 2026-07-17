@@ -2,7 +2,7 @@ import type { Character, Location, Project, Shot, TextField } from "@/lib/types"
 import { charactersInShot, sceneForShot } from "@/lib/generation/promptComposer";
 
 /**
- * Level 1 / 2 / 3 prompt exporters plus the Markdown shot table.
+ * Step 1 / 2 / 3 prompt exporters plus the Markdown shot table.
  * All output is a pure function of the project — no timestamps, no
  * randomness — so the same project always exports the same text.
  */
@@ -48,7 +48,7 @@ function locationBlock(l: Location): string {
   ]);
 }
 
-/** Level 2: the film bible, characters, locations, style rules, negatives. */
+/** Step 2: the film bible, characters, locations, style rules, negatives. */
 export function generateProjectBrief(project: Project): string {
   const b = project.bible;
   const parts = [
@@ -79,7 +79,7 @@ export function generateProjectBrief(project: Project): string {
   return parts.join("\n\n");
 }
 
-/** Level 1: how the external video agent should behave, start to finish. */
+/** Step 1: how the external video agent should behave, start to finish. */
 export function generateAgentSetupPrompt(project: Project): string {
   const shotCount = project.shots.length;
   return [
@@ -107,7 +107,7 @@ export function generateAgentSetupPrompt(project: Project): string {
   ].join("\n");
 }
 
-/** One Level 3 execution prompt for a single shot. */
+/** One Step 3 execution prompt for a single shot. */
 export function generateShotPrompt(project: Project, shot: Shot, index: number): string {
   const scene = sceneForShot(project, shot);
   const cast = charactersInShot(project, shot);
@@ -147,7 +147,7 @@ export function generateShotPrompt(project: Project, shot: Shot, index: number):
   ].join("\n");
 }
 
-/** Level 3: all shot execution prompts concatenated in order. */
+/** Step 3: all shot execution prompts concatenated in order. */
 export function generateShotExecutionPrompts(project: Project): string {
   const header = [
     `# Shot Execution Prompts — ${project.title.value}`,

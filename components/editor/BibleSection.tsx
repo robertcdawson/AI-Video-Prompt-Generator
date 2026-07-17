@@ -2,7 +2,8 @@
 
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
-import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
+import { FocusHiddenNote, NeedsReviewCount } from "@/components/ui/FocusHiddenNote";
+import { collectTextFields } from "@/lib/stats";
 import { useOpenProject } from "@/lib/state/ProjectContext";
 
 export function BibleSection() {
@@ -12,7 +13,12 @@ export function BibleSection() {
     dispatch({ type: "SET_BIBLE_FIELD", key, field });
 
   return (
-    <CollapsibleSection title="Project Bible" subtitle="The rules every shot must obey">
+    <CollapsibleSection
+      title="Project Bible"
+      subtitle="The rules every shot must obey"
+      badge={<NeedsReviewCount fields={collectTextFields(b)} />}
+    >
+      <FocusHiddenNote fields={collectTextFields(b)} />
       <div className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
         <div>
           <FieldInput label="Premise" field={b.premise} onChange={set("premise")} multiline />
@@ -47,24 +53,6 @@ export function BibleSection() {
           rows={3}
         />
       </div>
-      <FocusHiddenNote
-        fields={[
-          b.premise,
-          b.theme,
-          b.tone,
-          b.visualIntent,
-          b.aspectRatio,
-          b.pace,
-          b.visualStyle,
-          b.colorPalette,
-          b.lightingStyle,
-          b.cameraLanguage,
-          b.texture,
-          b.motionLanguage,
-          b.continuityRules,
-          b.negativeConstraints,
-        ]}
-      />
     </CollapsibleSection>
   );
 }

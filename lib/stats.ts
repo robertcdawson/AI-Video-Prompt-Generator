@@ -13,15 +13,18 @@ function isTextField(v: unknown): v is TextField {
   );
 }
 
+/** Every TextField directly on an object — the same walk projectFieldStats uses. */
+export function collectTextFields(obj: object): TextField[] {
+  return Object.values(obj).filter(isTextField);
+}
+
 /** Walk every FieldMeta in the project and tally review status — the "diagnostics" count. */
 export function projectFieldStats(project: Project): FieldStats {
   const stats: FieldStats = { confirmed: 0, needs_review: 0, placeholder: 0, missing: 0, total: 0 };
   const visit = (obj: object) => {
-    for (const v of Object.values(obj)) {
-      if (isTextField(v)) {
-        stats[v.status] += 1;
-        stats.total += 1;
-      }
+    for (const v of collectTextFields(obj)) {
+      stats[v.status] += 1;
+      stats.total += 1;
     }
   };
   visit({ title: project.title });

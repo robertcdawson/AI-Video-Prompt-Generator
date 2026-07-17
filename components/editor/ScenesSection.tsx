@@ -4,9 +4,13 @@ import type { Scene } from "@/lib/types";
 import type { TextFieldKeys } from "@/lib/state/reducer";
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
-import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
+import { FocusHiddenNote, NeedsReviewCount } from "@/components/ui/FocusHiddenNote";
 import { CharacterPicker, LocationSelect } from "@/components/editor/pickers";
+import { collectTextFields } from "@/lib/stats";
 import { freshId, useOpenProject } from "@/lib/state/ProjectContext";
+
+/** The fields Focus mode can hide — everything except the always-visible title. */
+const hideableFields = (s: Scene) => [s.purpose, s.emotionalGoal, s.beats, s.continuityNotes];
 
 function SceneCard({ scene, index }: { scene: Scene; index: number }) {
   const { project, dispatch } = useOpenProject();
@@ -64,7 +68,6 @@ function SceneCard({ scene, index }: { scene: Scene; index: number }) {
           <FieldInput label="Continuity notes" field={scene.continuityNotes} onChange={set("continuityNotes")} multiline rows={2} />
         </div>
       </div>
-      <FocusHiddenNote fields={[scene.purpose, scene.emotionalGoal, scene.beats, scene.continuityNotes]} />
     </div>
   );
 }
@@ -72,7 +75,12 @@ function SceneCard({ scene, index }: { scene: Scene; index: number }) {
 export function ScenesSection() {
   const { project, dispatch } = useOpenProject();
   return (
-    <CollapsibleSection title="Scenes" subtitle={`${project.scenes.length} defined`}>
+    <CollapsibleSection
+      title="Scenes"
+      subtitle={`${project.scenes.length} defined`}
+      badge={<NeedsReviewCount fields={project.scenes.flatMap(collectTextFields)} />}
+    >
+      <FocusHiddenNote fields={project.scenes.flatMap(hideableFields)} />
       <div className="flex flex-col gap-4">
         {project.scenes.length === 0 && <p className="text-sm text-zinc-400">No scenes yet — add one below.</p>}
         {project.scenes.map((s, i) => (

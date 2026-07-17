@@ -4,8 +4,24 @@ import type { Character } from "@/lib/types";
 import type { TextFieldKeys } from "@/lib/state/reducer";
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
-import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
+import { FocusHiddenNote, NeedsReviewCount } from "@/components/ui/FocusHiddenNote";
+import { collectTextFields } from "@/lib/stats";
 import { freshId, useOpenProject } from "@/lib/state/ProjectContext";
+
+/** The fields Focus mode can hide — everything except the always-visible name. */
+const hideableFields = (c: Character) => [
+  c.role,
+  c.appearance,
+  c.wardrobe,
+  c.posture,
+  c.movementStyle,
+  c.emotionalBaseline,
+  c.voice,
+  c.recurringGestures,
+  c.continuityAnchors,
+  c.referenceImageNotes,
+  c.neverChange,
+];
 
 function CharacterCard({ character }: { character: Character }) {
   const { dispatch } = useOpenProject();
@@ -48,21 +64,6 @@ function CharacterCard({ character }: { character: Character }) {
           <FieldInput label="Must never change" field={character.neverChange} onChange={set("neverChange")} multiline rows={2} />
         </div>
       </div>
-      <FocusHiddenNote
-        fields={[
-          character.role,
-          character.appearance,
-          character.wardrobe,
-          character.posture,
-          character.movementStyle,
-          character.emotionalBaseline,
-          character.voice,
-          character.recurringGestures,
-          character.continuityAnchors,
-          character.referenceImageNotes,
-          character.neverChange,
-        ]}
-      />
     </div>
   );
 }
@@ -73,7 +74,9 @@ export function CharactersSection() {
     <CollapsibleSection
       title="Characters"
       subtitle={`${project.characters.length} defined`}
+      badge={<NeedsReviewCount fields={project.characters.flatMap(collectTextFields)} />}
     >
+      <FocusHiddenNote fields={project.characters.flatMap(hideableFields)} />
       <div className="flex flex-col gap-4">
         {project.characters.length === 0 && (
           <p className="text-sm text-zinc-400">No characters yet — add one below.</p>
