@@ -52,33 +52,34 @@ export function ExportsSection() {
         <div>
           <h3 className="text-base font-semibold text-zinc-900">Copy prompts into your video agent</h3>
           <p className="mt-1 text-sm text-zinc-500">
-            Three levels, meant to be pasted in order: setup first, then the brief, then shots.
+            Paste these prompts into your video agent in order. First set up how the agent should work, then
+            provide the project context, and finally give it the individual shot prompts.
           </p>
 
           <div className="mt-3 flex flex-col gap-4">
             <div>
-              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Level 1 — Agent Setup Prompt</h4>
+              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Step 1 — Set Up the Agent</h4>
               <p className="mb-2 text-sm text-zinc-500">
-                Paste this first: it tells the agent (e.g. Google Flow) how to behave — one shot at a time,
-                restate before generating, never generate without approval.
+                Paste this first. It tells the video agent to work one shot at a time, restate its understanding
+                before generating, and wait for your approval.
               </p>
               <CopyButton label="Copy Agent Setup Prompt" getText={() => generateAgentSetupPrompt(project)} />
             </div>
 
             <div>
-              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Level 2 — Project Brief</h4>
+              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Step 2 — Add the Project Brief</h4>
               <p className="mb-2 text-sm text-zinc-500">
-                The film bible: style rules, characters, locations, continuity rules, and negative constraints.
-                Unconfirmed fields are flagged inline so the agent knows what is still soft.
+                Paste this next. It supplies the film bible, characters, locations, visual rules, continuity
+                requirements, and negative constraints.
               </p>
               <CopyButton label="Copy Project Brief" getText={() => generateProjectBrief(project)} />
             </div>
 
             <div>
-              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Level 3 — Shot Execution Prompts</h4>
+              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Step 3 — Generate the Shots</h4>
               <p className="mb-2 text-sm text-zinc-500">
-                One prompt per shot, in order, each with its first-frame and video prompts. (Individual shots can
-                also be copied from the Shots section.)
+                Paste these last. They provide the instructions, first-frame prompt, and video prompt for each
+                shot in sequence. You can also copy individual shots from the Shots section.
               </p>
               <CopyButton label="Copy Shot Execution Prompts" getText={() => generateShotExecutionPrompts(project)} />
             </div>

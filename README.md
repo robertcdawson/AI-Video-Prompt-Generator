@@ -26,10 +26,10 @@ npm run lint
 2. **Idea intake** — describe the video roughly (try: *"Two identical androids sit on a couch and joke about how humans outsource their thinking to AI."*) and hit **Generate Project Draft**.
 3. **Project editor** — collapsible sections for Bible, Characters, Locations, Scenes, Shots, Exports. Every field shows provenance badges and a Confirm toggle; the header counts confirmed vs. open fields. **Focus mode** hides everything you've already confirmed.
 4. **Shots** — each shot card carries blocking, screen direction, framing, lens, movement, dialogue, continuity notes, a first-frame prompt and a video prompt (rebuildable from the structured fields), plus status and version.
-5. **Exports** — three prompt levels, each copy-to-clipboard:
-   - **Level 1 — Agent Setup Prompt**: instructs the video agent to read the bible, confirm the rules, work one shot at a time, restate each shot for approval, and never generate unapproved.
-   - **Level 2 — Project Brief**: bible + characters + locations + continuity rules + negative constraints.
-   - **Level 3 — Shot Execution Prompts**: one prompt per shot.
+5. **Exports** — three sequential prompts, each copy-to-clipboard:
+   - **Step 1 — Set Up the Agent**: instructs the video agent to read the bible, confirm the rules, work one shot at a time, restate each shot for approval, and never generate unapproved.
+   - **Step 2 — Add the Project Brief**: bible + characters + locations + continuity rules + negative constraints.
+   - **Step 3 — Generate the Shots**: one prompt per shot.
    - Plus: project JSON download/import and a Markdown shot table.
 
 ### Identical-character handling

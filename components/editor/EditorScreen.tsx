@@ -8,6 +8,7 @@ import { LocationsSection } from "@/components/editor/LocationsSection";
 import { ScenesSection } from "@/components/editor/ScenesSection";
 import { ShotsSection } from "@/components/editor/ShotsSection";
 import { ExportsSection } from "@/components/editor/ExportsSection";
+import { HowToUseSection } from "@/components/editor/HowToUseSection";
 import { projectFieldStats } from "@/lib/stats";
 import { useOpenProject } from "@/lib/state/ProjectContext";
 
@@ -58,8 +59,9 @@ function EditorHeader({ onExit }: { onExit: () => void }) {
             {openItems > 0 ? (
               <>
                 <strong>Focus mode is on:</strong> confirmed fields are temporarily hidden so you can
-                concentrate on the <strong>{openItems}</strong> still needing review. Nothing is deleted —
-                turn Focus mode off to see everything again.
+                concentrate on the <strong>{openItems}</strong> still needing review — follow the amber
+                “to review” counts on each section to find them. Nothing is deleted — turn Focus mode
+                off to see everything again.
               </>
             ) : (
               <>
@@ -86,6 +88,7 @@ export function EditorScreen({ onExit }: { onExit: () => void }) {
           <ScenesSection />
           <ShotsSection />
           <ExportsSection />
+          <HowToUseSection />
         </main>
         <footer className="mx-auto max-w-5xl px-6 pb-8 text-sm text-zinc-400">
           Autosaves to this browser. Download the project file from the Exports section to keep a portable copy.
