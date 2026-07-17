@@ -3,8 +3,9 @@
 import { useState } from "react";
 import type { FieldStatus, Shot } from "@/lib/types";
 import type { TextFieldKeys } from "@/lib/state/reducer";
-import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
+import { CollapsibleSection, DisclosureChevron } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
+import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { CharacterPicker } from "@/components/editor/pickers";
@@ -28,7 +29,8 @@ function ShotCard({ shot, index }: { shot: Shot; index: number }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="grid w-full grid-cols-[2.5rem_1fr_auto] items-center gap-3 px-4 py-3 text-left hover:bg-zinc-50"
+        aria-expanded={open}
+        className="grid min-h-[45px] w-full grid-cols-[2.5rem_1fr_auto] items-center gap-3 py-1.5 pl-4 pr-1 text-left hover:bg-zinc-50"
       >
         <span className="text-sm font-bold text-zinc-400">{index + 1}</span>
         <span className="min-w-0">
@@ -43,7 +45,7 @@ function ShotCard({ shot, index }: { shot: Shot; index: number }) {
         <span className="flex items-center gap-2">
           <span className="text-xs text-zinc-400">v{shot.version}</span>
           <StatusBadge status={shot.status} />
-          <span className="text-zinc-400">{open ? "▾" : "▸"}</span>
+          <DisclosureChevron open={open} />
         </span>
       </button>
 
@@ -119,6 +121,28 @@ function ShotCard({ shot, index }: { shot: Shot; index: number }) {
               <FieldInput label="Negative constraints (shot-specific)" field={shot.negativeConstraints} onChange={set("negativeConstraints")} multiline rows={2} />
             </div>
           </div>
+          <FocusHiddenNote
+            fields={[
+              shot.purpose,
+              shot.beat,
+              shot.blocking,
+              shot.screenDirection,
+              shot.framing,
+              shot.lens,
+              shot.movement,
+              shot.composition,
+              shot.lighting,
+              shot.action,
+              shot.dialogue,
+              shot.audioNotes,
+              shot.duration,
+              shot.transition,
+              shot.continuityNotes,
+              shot.negativeConstraints,
+              shot.firstFramePrompt,
+              shot.videoPrompt,
+            ]}
+          />
 
           <div className="mt-3 rounded-lg border border-sky-100 bg-sky-50/50 p-3">
             <div className="mb-1 flex items-center justify-between">

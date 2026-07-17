@@ -4,6 +4,7 @@ import type { Location } from "@/lib/types";
 import type { TextFieldKeys } from "@/lib/state/reducer";
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
+import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
 import { freshId, useOpenProject } from "@/lib/state/ProjectContext";
 
 function LocationCard({ location }: { location: Location }) {
@@ -15,7 +16,8 @@ function LocationCard({ location }: { location: Location }) {
     <div className="rounded-lg border border-zinc-200 bg-zinc-50/50 p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <FieldInput label="Name" field={location.name} onChange={set("name")} />
+          {/* Identity stays visible in focus mode so the card is never anonymous */}
+          <FieldInput label="Name" field={location.name} onChange={set("name")} ignoreFocusMode />
         </div>
         <button
           type="button"
@@ -43,6 +45,18 @@ function LocationCard({ location }: { location: Location }) {
           <FieldInput label="Reference image notes" field={location.referenceImageNotes} onChange={set("referenceImageNotes")} multiline rows={2} />
         </div>
       </div>
+      <FocusHiddenNote
+        fields={[
+          location.description,
+          location.architecture,
+          location.lighting,
+          location.props,
+          location.materialPalette,
+          location.atmosphere,
+          location.continuityRisks,
+          location.referenceImageNotes,
+        ]}
+      />
     </div>
   );
 }

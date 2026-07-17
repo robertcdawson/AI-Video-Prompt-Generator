@@ -2,6 +2,7 @@
 
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
+import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
 import { useOpenProject } from "@/lib/state/ProjectContext";
 
 export function BibleSection() {
@@ -46,6 +47,24 @@ export function BibleSection() {
           rows={3}
         />
       </div>
+      <FocusHiddenNote
+        fields={[
+          b.premise,
+          b.theme,
+          b.tone,
+          b.visualIntent,
+          b.aspectRatio,
+          b.pace,
+          b.visualStyle,
+          b.colorPalette,
+          b.lightingStyle,
+          b.cameraLanguage,
+          b.texture,
+          b.motionLanguage,
+          b.continuityRules,
+          b.negativeConstraints,
+        ]}
+      />
     </CollapsibleSection>
   );
 }

@@ -4,6 +4,7 @@ import type { Character } from "@/lib/types";
 import type { TextFieldKeys } from "@/lib/state/reducer";
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
+import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
 import { freshId, useOpenProject } from "@/lib/state/ProjectContext";
 
 function CharacterCard({ character }: { character: Character }) {
@@ -15,7 +16,8 @@ function CharacterCard({ character }: { character: Character }) {
     <div className="rounded-lg border border-zinc-200 bg-zinc-50/50 p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <FieldInput label="Name" field={character.name} onChange={set("name")} />
+          {/* Identity stays visible in focus mode so the card is never anonymous */}
+          <FieldInput label="Name" field={character.name} onChange={set("name")} ignoreFocusMode />
         </div>
         <button
           type="button"
@@ -46,6 +48,21 @@ function CharacterCard({ character }: { character: Character }) {
           <FieldInput label="Must never change" field={character.neverChange} onChange={set("neverChange")} multiline rows={2} />
         </div>
       </div>
+      <FocusHiddenNote
+        fields={[
+          character.role,
+          character.appearance,
+          character.wardrobe,
+          character.posture,
+          character.movementStyle,
+          character.emotionalBaseline,
+          character.voice,
+          character.recurringGestures,
+          character.continuityAnchors,
+          character.referenceImageNotes,
+          character.neverChange,
+        ]}
+      />
     </div>
   );
 }

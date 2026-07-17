@@ -18,7 +18,7 @@ function Chip({ label, className, title }: { label: string; className: string; t
   return (
     <span
       title={title}
-      className={`inline-flex items-center rounded-full border px-1.5 py-px text-[10px] font-medium leading-4 ${className}`}
+      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${className}`}
     >
       {label}
     </span>
