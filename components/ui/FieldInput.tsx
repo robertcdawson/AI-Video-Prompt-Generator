@@ -40,13 +40,13 @@ export function FieldInput({
 
   const confirmed = field.status === "confirmed";
   const canConfirm = field.value.trim() !== "";
-  const inputClasses = `w-full rounded-md border px-2.5 py-1.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 ${
+  const inputClasses = `w-full rounded-md border px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 ${
     field.status === "missing"
       ? "border-rose-300 bg-rose-50/40"
       : field.status === "placeholder"
         ? "border-orange-300 bg-orange-50/40"
         : "border-zinc-300 bg-white"
-  } ${mono ? "font-mono text-xs" : ""}`;
+  } ${mono ? "font-mono" : ""}`;
 
   return (
     <div className="py-2">
@@ -59,7 +59,7 @@ export function FieldInput({
           <button
             type="button"
             onClick={() => setShowNotes(!showNotes)}
-            className="text-xs text-zinc-400 hover:text-zinc-600"
+            className="px-1 py-1 text-xs text-zinc-400 hover:text-zinc-600"
           >
             {field.notes ? "notes ●" : "notes"}
           </button>
@@ -67,7 +67,7 @@ export function FieldInput({
             type="button"
             disabled={!canConfirm}
             onClick={() => onChange(withStatus(field, confirmed ? "needs_review" : "confirmed"))}
-            className={`rounded-md border px-2 py-0.5 text-xs font-medium transition-colors ${
+            className={`rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
               confirmed
                 ? "border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
                 : "border-zinc-300 bg-white text-zinc-600 hover:bg-zinc-50 disabled:opacity-40"

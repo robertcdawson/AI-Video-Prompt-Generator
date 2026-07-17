@@ -1,9 +1,31 @@
 @import "tailwindcss";
 
-/* System font stack keeps the build network-free; the UI is a fixed light
-   palette for the MVP (dark theme is on the roadmap, not half-supported). */
+/*
+ * Type scale: Tailwind's default steps are nudged up (~1px-2px each) for
+ * readability, and the workhorse sizes are fluid so text grows gently with
+ * the viewport instead of jumping at breakpoints. Everything stays in rem,
+ * so user font-size preferences and browser zoom are respected.
+ */
+@theme {
+  --text-xs: 0.8125rem; /* 13px, was 12px */
+  --text-xs--line-height: 1.5;
+  --text-sm: clamp(0.9375rem, 0.91rem + 0.15vw, 1rem); /* 15px → 16px */
+  --text-sm--line-height: 1.5;
+  --text-base: clamp(1.0625rem, 1.03rem + 0.2vw, 1.125rem); /* 17px → 18px */
+  --text-base--line-height: 1.55;
+  --text-lg: clamp(1.1875rem, 1.15rem + 0.25vw, 1.25rem); /* 19px → 20px */
+  --text-lg--line-height: 1.5;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: clamp(1.875rem, 1.7rem + 0.9vw, 2.25rem);
+  --text-3xl--line-height: 1.2;
+}
+
+/* Variable font with a system-stack fallback; the woff2 is vendored in
+   app/fonts so the build stays network-free. */
 body {
   font-family:
+    var(--font-inter),
     ui-sans-serif,
     system-ui,
     -apple-system,
@@ -12,4 +34,7 @@ body {
     "Helvetica Neue",
     Arial,
     sans-serif;
+  /* Don't let mobile Safari inflate text on rotate; sizes are already fluid. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }

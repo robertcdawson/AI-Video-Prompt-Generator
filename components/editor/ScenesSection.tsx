@@ -4,6 +4,7 @@ import type { Scene } from "@/lib/types";
 import type { TextFieldKeys } from "@/lib/state/reducer";
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 import { FieldInput } from "@/components/ui/FieldInput";
+import { FocusHiddenNote } from "@/components/ui/FocusHiddenNote";
 import { CharacterPicker, LocationSelect } from "@/components/editor/pickers";
 import { freshId, useOpenProject } from "@/lib/state/ProjectContext";
 
@@ -17,7 +18,8 @@ function SceneCard({ scene, index }: { scene: Scene; index: number }) {
     <div className="rounded-lg border border-zinc-200 bg-zinc-50/50 p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <FieldInput label={`Scene ${index + 1} — Title`} field={scene.title} onChange={set("title")} />
+          {/* Identity stays visible in focus mode so the card is never anonymous */}
+          <FieldInput label={`Scene ${index + 1} — Title`} field={scene.title} onChange={set("title")} ignoreFocusMode />
         </div>
         <button
           type="button"
@@ -62,6 +64,7 @@ function SceneCard({ scene, index }: { scene: Scene; index: number }) {
           <FieldInput label="Continuity notes" field={scene.continuityNotes} onChange={set("continuityNotes")} multiline rows={2} />
         </div>
       </div>
+      <FocusHiddenNote fields={[scene.purpose, scene.emotionalGoal, scene.beats, scene.continuityNotes]} />
     </div>
   );
 }

@@ -43,39 +43,55 @@ export function ExportsSection() {
     }
   };
 
+  const fileButton =
+    "rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50";
+
   return (
-    <CollapsibleSection title="Exports" subtitle="Copy prompts into your video agent, or save the project">
-      <div className="flex flex-col gap-5">
+    <CollapsibleSection title="Exports" subtitle="Copy prompts for your video agent, or save this project as a file">
+      <div className="flex flex-col gap-6">
         <div>
-          <h3 className="mb-1 text-sm font-semibold text-zinc-800">Level 1 — Agent Setup Prompt</h3>
-          <p className="mb-2 text-xs text-zinc-500">
-            Paste this first: it tells the agent (e.g. Google Flow) how to behave — one shot at a time,
-            restate before generating, never generate without approval.
+          <h3 className="text-base font-semibold text-zinc-900">Copy prompts into your video agent</h3>
+          <p className="mt-1 text-sm text-zinc-500">
+            Three levels, meant to be pasted in order: setup first, then the brief, then shots.
           </p>
-          <CopyButton label="Copy Agent Setup Prompt" getText={() => generateAgentSetupPrompt(project)} />
+
+          <div className="mt-3 flex flex-col gap-4">
+            <div>
+              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Level 1 — Agent Setup Prompt</h4>
+              <p className="mb-2 text-sm text-zinc-500">
+                Paste this first: it tells the agent (e.g. Google Flow) how to behave — one shot at a time,
+                restate before generating, never generate without approval.
+              </p>
+              <CopyButton label="Copy Agent Setup Prompt" getText={() => generateAgentSetupPrompt(project)} />
+            </div>
+
+            <div>
+              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Level 2 — Project Brief</h4>
+              <p className="mb-2 text-sm text-zinc-500">
+                The film bible: style rules, characters, locations, continuity rules, and negative constraints.
+                Unconfirmed fields are flagged inline so the agent knows what is still soft.
+              </p>
+              <CopyButton label="Copy Project Brief" getText={() => generateProjectBrief(project)} />
+            </div>
+
+            <div>
+              <h4 className="mb-1 text-sm font-semibold text-zinc-800">Level 3 — Shot Execution Prompts</h4>
+              <p className="mb-2 text-sm text-zinc-500">
+                One prompt per shot, in order, each with its first-frame and video prompts. (Individual shots can
+                also be copied from the Shots section.)
+              </p>
+              <CopyButton label="Copy Shot Execution Prompts" getText={() => generateShotExecutionPrompts(project)} />
+            </div>
+          </div>
         </div>
 
-        <div>
-          <h3 className="mb-1 text-sm font-semibold text-zinc-800">Level 2 — Project Brief</h3>
-          <p className="mb-2 text-xs text-zinc-500">
-            The film bible: style rules, characters, locations, continuity rules, and negative constraints.
-            Unconfirmed fields are flagged inline so the agent knows what is still soft.
+        <div className="border-t border-zinc-100 pt-5">
+          <h3 className="text-base font-semibold text-zinc-900">Save this project</h3>
+          <p className="mt-1 text-sm text-zinc-500">
+            Your work autosaves to this browser only. Download the project file to keep a permanent backup or
+            to move it to another device — you can re-open it here anytime.
           </p>
-          <CopyButton label="Copy Project Brief" getText={() => generateProjectBrief(project)} />
-        </div>
-
-        <div>
-          <h3 className="mb-1 text-sm font-semibold text-zinc-800">Level 3 — Shot Execution Prompts</h3>
-          <p className="mb-2 text-xs text-zinc-500">
-            One prompt per shot, in order, each with its first-frame and video prompts. (Individual shots can
-            also be copied from the Shots section.)
-          </p>
-          <CopyButton label="Copy Shot Execution Prompts" getText={() => generateShotExecutionPrompts(project)} />
-        </div>
-
-        <div className="border-t border-zinc-100 pt-4">
-          <h3 className="mb-1 text-sm font-semibold text-zinc-800">Files</h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap items-start gap-2">
             <button
               type="button"
               onClick={() =>
@@ -85,38 +101,46 @@ export function ExportsSection() {
                   "application/json",
                 )
               }
-              className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50"
+              className={fileButton}
             >
-              Download project JSON
+              Download project file (.json)
             </button>
             <button
               type="button"
               onClick={() =>
                 download(`${slug(project.title.value)}-shot-table.md`, generateMarkdownShotTable(project), "text/markdown")
               }
-              className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50"
+              className={fileButton}
             >
-              Download Markdown shot table
+              Download shot table (Markdown)
             </button>
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50"
-            >
-              Import project JSON…
-            </button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="application/json,.json"
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) void handleImport(f);
-                e.target.value = "";
-              }}
-            />
           </div>
+          <p className="mt-2 text-sm text-zinc-500">
+            The shot table is a read-only summary for sharing with collaborators — only the project file can be
+            re-opened here.
+          </p>
+        </div>
+
+        <div className="border-t border-zinc-100 pt-5">
+          <h3 className="text-base font-semibold text-zinc-900">Re-open a saved project</h3>
+          <p className="mt-1 text-sm text-zinc-500">
+            Load a project file (.json) you downloaded earlier. It replaces whatever is currently in the editor,
+            so save the current project first if you want to keep it.
+          </p>
+          <button type="button" onClick={() => fileRef.current?.click()} className={`mt-3 ${fileButton}`}>
+            Open project file…
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void handleImport(f);
+              e.target.value = "";
+            }}
+          />
           {importError !== null && (
             <p className="mt-2 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
               {importError}
